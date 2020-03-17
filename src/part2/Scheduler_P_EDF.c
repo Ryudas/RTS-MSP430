@@ -14,7 +14,8 @@ void Scheduler_P_EDF (Task Tasks[])
 
   // Order ready queue
   uint8_t high_prio_idx = 0;
-  for (int i = 0; i < NUMTASKS; ++i)
+  int i = 0;
+  for ( i = 0; i < NUMTASKS; ++i)
   {
 
 	    Taskp t = &Tasks[i]; 
