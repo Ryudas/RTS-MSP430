@@ -5,6 +5,7 @@
 #include "Scheduler.h"
 #include "Led.h"
 #include "Context.h"
+#include "TimeTracking.h"
 
 Task Tasks[NUMTASKS];           /* Lower indices: lower priorities           */
 uint16_t NextInterruptTime;     /* Timestamp at which next interrupt should occur */
@@ -105,28 +106,47 @@ static void DetermineNextInterruptTime (CandidateValue)
 
 interrupt (TIMERA0_VECTOR) TimerIntrpt (void)
 {
-  ContextSwitch();
+	int i;
 
-  /* ----------------------- INSERT CODE HERE ----------------------- */
+	StartTracking(TT_TIMER_INTERRUPT);
 
-  /* Insert timer interrupt logic, what tasks are pending? */ 
-  /* When should the next timer interrupt occur? Note: we only want interrupts at job releases */
+	ContextSwitch();
 
-  /* Super simple, single task example */
-  Taskp t = &Tasks[0];
-  t->NextRelease += t->Period; // set next release time
-  t->Activated++;
-  NextInterruptTime = t->NextRelease;
-  /* End of example*/
+	SetLeds(WHITE, 1);
 
-  /* ---------------------------------------------------------------- */
- 
+	while (NextInterruptTime <= TAR)
+	{
+		NextInterruptTime = 0xFFFF; 
 
-  TACCR0 = NextInterruptTime;
+		for (i = 0; i < NUMTASKS; i++) 
+		{
+			Taskp t = &Tasks[i];
 
-  CALL_SCHEDULER;
+			if (t->Flags & TRIGGERED)
+			{
+				if (t->NextRelease <= TAR) 
+				{
+					t->Activated++;
+					t->NextRelease += t->Period;
+				}
+				DetermineNextInterruptTime(t->NextRelease);
+			}
+		}
+	}
 
-  ResumeContext();
+	TACCR0 = NextInterruptTime;
+
+	SetLeds(WHITE, 0);
+	StopTracking(TT_TIMER_INTERRUPT);
+
+	SetLeds(BROWN, 1);
+
+	CALL_SCHEDULER;
+
+	SetLeds(BROWN, 0);
+
+	ResumeContext();
+	PrintResults();
 }
 
 #endif
