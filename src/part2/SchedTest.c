@@ -61,7 +61,7 @@ int main(void)
 
   InitLeds (RED | GREEN | YELLOW | WHITE | BROWN | PURPLE);
 
-#define TstSweep
+#define Tst1
 
 #ifdef Tst1
   // note: there 1024 ticks in second

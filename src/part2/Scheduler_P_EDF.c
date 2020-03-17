@@ -16,41 +16,44 @@ void Scheduler_P_EDF (Task Tasks[])
 { 
 
   // Order ready queue
-  uint8_t high_prio_idx = 0;
   int j = 0, i = 0;
   Taskp t;
-
-  for(j = 0; j< NUMTASKS; j++)
-  { 
+  uint8_t prio_tsk;
+  Task temp;
   	
-
+  	// for every task  we run in order 
   	for ( i = 0; i < NUMTASKS; ++i)
   	{
 
-	    t = &Tasks[i]; 
-	  	// check ready 
-	  	if (t->Activated != t->Invoked)
+	    
+	    // loop through all tasks and find earliest deadline
+	  
+	  	for (j = 0 ; j < NUMTASKS -1; j++)
 	  	{
-	  		  	
-		  	if(t->NextPendingDeadline < Tasks[high_prio_idx].NextPendingDeadline )
-				high_prio_idx = i;
-	  	}
+	  		t = &Tasks[j];
 
+  			if(t->NextPendingDeadline   < Tasks[i].NextPendingDeadline )
+				prio_tsk = j;
+
+	  	}
+	  
+
+
+	  	while (t->Activated != t->Invoked)
+		{
+			t->Flags |= BUSY_EXEC;
+			_EINT();
+			StopTracking(TT_SCHEDULER);
+			ExecuteTask(&Tasks[prio_tsk]);
+			StartTracking(TT_SCHEDULER);
+			_DINT();
+			StopTracking(TT_SCHEDULER);
+		}
 
   	}
 
-	while (t->Activated != t->Invoked)
-	{
-		t->Flags |= BUSY_EXEC;
-		_EINT();
-		StopTracking(TT_SCHEDULER);
-		ExecuteTask(&Tasks[high_prio_idx]);
-		StartTracking(TT_SCHEDULER);
-		_DINT();
-		StopTracking(TT_SCHEDULER);
-	}
 
-  }
+  
   
 
 }
