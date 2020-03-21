@@ -21,39 +21,67 @@ void Scheduler_P_EDF (Task Tasks[])
   uint8_t prio_tsk;
   Task temp;
   	
-  	// for every task  we run in order 
+  	// for every task  we change ordering
   	for ( i = 0; i < NUMTASKS; ++i)
   	{
 
 	    
-	    // loop through all tasks and find earliest deadline
+	    // loop through all tasks and reorder Tasks by earliest deadline
 	  
-	  	for (j = 0 ; j < NUMTASKS -1; j++)
+	  	for (j = i ; j < NUMTASKS; j++)
 	  	{
 	  		t = &Tasks[j];
 
   			if(t->NextPendingDeadline   < Tasks[i].NextPendingDeadline )
-				prio_tsk = j;
+  			{
+  								// swap! 
+  				temp = Tasks[i];
+  				Tasks[i] = Tasks[j];
+  				Tasks[j] = temp;
+
+  			}	
 
 	  	}
 	  
 
-
-	  	while (t->Activated != t->Invoked)
-		{
-			t->Flags |= BUSY_EXEC;
-			_EINT();
-			StopTracking(TT_SCHEDULER);
-			ExecuteTask(&Tasks[prio_tsk]);
-			StartTracking(TT_SCHEDULER);
-			_DINT();
-			StopTracking(TT_SCHEDULER);
-		}
-
   	}
 
 
-  
+  	// FP for the rest of normal algorithm
+	for ( i = 0; i < NUMTASKS; ++i)
+  	{
+
+
+		StartTracking(TT_SCHEDULER);
+		Taskp t = &Tasks[i];
+		if (t->Flags & BUSY_EXEC)
+		{
+			StopTracking(TT_SCHEDULER);
+			PrintResults();
+			break;
+		}
+		else
+		{
+			if (!(t->Flags & TRIGGERED))
+			{
+				t->Activated = t->Invoked;
+			}
+
+			while (t->Activated != t->Invoked)
+			{
+				t->Flags |= BUSY_EXEC;
+				_EINT();
+				StopTracking(TT_SCHEDULER);
+				ExecuteTask(t);
+				StartTracking(TT_SCHEDULER);
+				_DINT();
+				StopTracking(TT_SCHEDULER);
+			}
+		}
+		PrintResults();	
+
+  	}
+
   
 
 }
