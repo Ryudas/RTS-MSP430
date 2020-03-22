@@ -56,7 +56,7 @@ void Scheduler_P_RM (Task Tasks[])
 				// OR  t0  is latest to execute and end of candidate task 
 				// is lesser than the latest possible time for T0 to start 	
 				if( (TAR + t->ExecutionTime) <= Tasks[0].NextRelease ||  
-					(TAR + t->ExecutionTime) <= Tasks[0].NextRelease + Tasks[0].Period - ExecutionTime   
+					(TAR + t->ExecutionTime) <= (Tasks[0].NextRelease + Tasks[0].Period - ExecutionTime)   
 				  
 				){
 

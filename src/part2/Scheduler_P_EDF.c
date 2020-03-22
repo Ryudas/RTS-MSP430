@@ -22,7 +22,7 @@ void Scheduler_P_EDF (Task Tasks[])
   Task temp;
   	
   	// for every task  we change ordering
-    // simple selection sort
+    // simple selection
   	for ( i = 0; i < NUMTASKS; ++i)
   	{
 
