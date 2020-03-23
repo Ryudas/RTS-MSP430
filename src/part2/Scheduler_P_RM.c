@@ -26,6 +26,10 @@ void Scheduler_P_RM (Task Tasks[])
 	// rnext should be done in interrupt 
 	// for all tasks 	
 	int i;
+    
+    // holds last executed task as bit (can only handle up to 16 tasks)
+    uint16_t latest_to_exec;
+
 	for (i = 0; i < NUMTASKS; i++)
 	{
 
@@ -54,13 +58,16 @@ void Scheduler_P_RM (Task Tasks[])
 				// next relead of highest prio in system
 
 				// OR  t0  is latest to execute and end of candidate task 
-				// is lesser than the latest possible time for T0 to start 	
+				// is lesser than the latest possible time for T0 to start 
 				if( (TAR + t->ExecutionTime) <= Tasks[0].NextRelease ||  
-					(TAR + t->ExecutionTime) <= (Tasks[0].NextRelease + Tasks[0].Period - ExecutionTime)   
-				  
+					((latest_to_exec & 0x1) && (TAR + t->ExecutionTime) <= (Tasks[0].NextRelease + Tasks[0].Period - ExecutionTime))
 				){
 
 					t->Flags |= BUSY_EXEC;
+
+					latest_to_exec &= 0; // clear buffer, track latest to exec
+					latest_to_exec |= 1<<i; // set latest to exec as current task
+
 					_EINT();
 					StopTracking(TT_SCHEDULER);
 					ExecuteTask(t);
