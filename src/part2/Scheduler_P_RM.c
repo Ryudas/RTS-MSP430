@@ -1,5 +1,6 @@
 #include "Scheduler.h"
 #include "Led.h"
+#include "TimeTracking.h"
 
 static void ExecuteTask (Taskp t)
 {
@@ -59,7 +60,7 @@ void Scheduler_P_RM (Task Tasks[])
 
 				// OR  t0  is latest to execute and end of candidate task 
 				// is lesser than the latest possible time for T0 to start 
-				if( (TAR + t->ExecutionTime) <= Tasks[0].NextRelease ||  
+				if( (TAR + (t->ExecutionTime) <= Tasks[0].NextRelease ||  
 					((latest_to_exec & 0x1) && (TAR + t->ExecutionTime) <= (Tasks[0].NextRelease + Tasks[0].Period - ExecutionTime))
 				){
 
