@@ -29,7 +29,7 @@ void Scheduler_P_RM (Task Tasks[])
 	int i;
     
     // holds last executed task as bit (can only handle up to 16 tasks)
-    uint16_t latest_to_exec;
+    uint16_t latest_to_exec = 0;
 
 	for (i = 0; i < NUMTASKS; i++)
 	{
