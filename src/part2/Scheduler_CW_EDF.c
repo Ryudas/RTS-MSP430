@@ -15,7 +15,6 @@ void Scheduler_CW_EDF (Task Tasks[])
   /// Order ready queue
   int j = 0, i = 0;
   Taskp t;
-  uint8_t prio_tsk;
   Task temp;
   	
   	// for every task  we change ordering
@@ -69,7 +68,7 @@ void Scheduler_CW_EDF (Task Tasks[])
   	uint16_t Li  = Tasks[last_idx].NextPendingDeadline - Tasks[last_idx].ExecutionTime;
 
   	// start at latest job that isnt m 
-  	for (int i = last_idx-1 ; i >= 0; i--)
+  	for ( i = last_idx-1 ; i >= 0; i--)
   	{
   		if( sorted_no_pend_tasks_idx[i] != -1)
   		{

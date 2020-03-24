@@ -18,7 +18,6 @@ void Scheduler_P_EDF (Task Tasks[])
   // Order ready queue
   int j = 0, i = 0;
   Taskp t;
-  uint8_t prio_tsk;
   Task temp;
   	
   	// for every task  we change ordering
