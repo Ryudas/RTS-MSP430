@@ -10,7 +10,7 @@ static void ExecuteTask (Taskp t)
   t->Flags ^= BUSY_EXEC;
 }
 
-uint16_t min_sort(uint16_t a, uint16_t b)
+uint16_t min(uint16_t a, uint16_t b)
 {
 	return( (a<b)? a:b);
 }
