@@ -10,6 +10,11 @@ static void ExecuteTask (Taskp t)
   t->Flags ^= BUSY_EXEC;
 }
 
+uint16_t min_sort(uint16_t a, uint16_t b)
+{
+	return( (a<b)? a:b);
+}
+
 void Scheduler_CW_EDF (Task Tasks[])
 { 
   /// Order ready queue
@@ -132,7 +137,3 @@ void Scheduler_CW_EDF (Task Tasks[])
 }
 
 
-uint16_t min (uint16_t a, uint16_t b)
-{
-	return( (a<b)? a:b);
-}
