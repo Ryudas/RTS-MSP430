@@ -113,7 +113,7 @@ void Scheduler_CW_EDF (Task Tasks[])
 
 				// OR  t0  is latest to execute and end of candidate task 
 				// is lesser than the latest possible time for T0 to start 	
-				if( (TAR + t->ExecutionTime) <= Li )
+				if( (current_time + t->ExecutionTime) <= Li )
 				{
 
 					t->Flags |= BUSY_EXEC;

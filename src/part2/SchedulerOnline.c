@@ -9,6 +9,7 @@
 
 Task Tasks[NUMTASKS];           /* Lower indices: lower priorities           */
 uint16_t NextInterruptTime;     /* Timestamp at which next interrupt should occur */
+uint16_t global_time; // global current system time (ms)
 
 uint16_t IntDisable (void)
 {
@@ -88,6 +89,7 @@ static void DetermineNextInterruptTime (CandidateValue)
   }
 }
 
+
 /*
   The timer interrupt is configured in continious mode with compare mode interrupts enabled.
   The source for Timer_A is ACLK/8 (32768 / 8 = 4096 Hz). Thus every 1/4096 second, the TAR register is incremented.
@@ -135,7 +137,8 @@ interrupt (TIMERA0_VECTOR) TimerIntrpt (void)
 	}
 
 	TACCR0 = NextInterruptTime;
-
+  global_time += NextInterruptTime; // each interrupt we add time of next interrupt
+  Tasks[0].global_time = global_time; // cheat 
 	SetLeds(WHITE, 0);
 	StopTracking(TT_TIMER_INTERRUPT);
 
