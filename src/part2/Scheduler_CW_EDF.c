@@ -22,7 +22,7 @@ void Scheduler_CW_EDF (Task Tasks[])
   Taskp t;
   Task temp;
   	
-  uint16_t current_time = Tasks[0].global_time + uint16_t(TAR * 1000.0/4096.0);
+  uint16_t current_time = Tasks[0].global_time + (TAR * 1000.0/4096.0);
   	// for every task  we change ordering
     // simple selection
   	for ( i = 0; i < NUMTASKS; ++i)
