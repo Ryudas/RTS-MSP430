@@ -14,7 +14,7 @@ void Scheduler_P_RM (Task Tasks[])
   /* insert code */
 	//. current time - > TAR 
 
-	 uint16_t current_time = Tasks[0].global_time + uint16_t(TAR * 1000.0/4096.0);
+	 uint16_t current_time = Tasks[0].global_time + (TAR * 1000.0/4096.0);
 
 	// select highest priority task (RM)
 
