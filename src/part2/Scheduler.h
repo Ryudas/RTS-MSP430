@@ -36,6 +36,7 @@ typedef struct Task {
            uint16_t ExecutionTime;/* Execution time of the task */ 
   void (*Taskf) (uint16_t);       /* function to be called as task body         */
   uint8_t Prio;                   /* priority, field needed for reverse lookup  */
+           uint16_t global_time;  // cheat so we can pass global current time 
 } Task;
   
 #define NULLTASK (Taskp) 0
